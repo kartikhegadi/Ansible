@@ -1,0 +1,95 @@
+Jenkins --- CI & CD tool
+Docker --- Containerization tool
+Kubernetes --- Container Orchestration tool
+
+Ansible - Configuration Management tool or IT Automation tool
+Other configuration management tools such as chef, puppet...
+
+Terraform - is used to automate the infrastructure creation
+Ansible - it used to configure the infrastructure 
+
+Ansible is free and open source
+It is invented by Michael Dehaan (2012-2013)
+RedHat is currently managing Ansible
+
+
++=====================================================+
+|           ANSIBLE ARCHITECTURE                      |
++=====================================================+
+
+  +-------+  +-------+  +-------+  +-------+  +-------+  +-------+
+  | dev-1 |  | dev-2 |  | test-1|  | test-2|  | prod-1|  | prod-2|
+  +-------+  +-------+  +-------+  +-------+  +-------+  +-------+
+      \          \           |          /          /          /
+       \          \          |         /          /          /
+        \          \   [SSH Connection]          /          /
+         \          \        |        /          /          /
+          \          \       |       /          /          /
+           \          \      |      /          /          /
+            \          \     |     /          /          /
+             +----------+----+----+----------+----------+
+                              |
+                    +===================+
+                    |    MASTER NODE    |
+                    |-------------------|
+                    | >> Install Ansible|
+                    | >> Install Python |
+                    +===================+
+                              |
+             +----------------+----------------+
+             |                                 |
+  +--------------------+          +--------------------+
+  | host inventory file|          |    ansible.cfg     |
+  | (list of all nodes)|          | (main config file) |
+  +--------------------+          +--------------------+
+
+  [!] All commands must be executed on Master Node
+
++=========================EXPLANATION=========================+
+|                                                             |
+|  1. MASTER NODE                                             |
+|     - Central control machine                               |
+|     - Ansible + Python installed here                       |
+|     - Sends instructions to all managed nodes               |
+|                                                             |
+|  2. MANAGED NODES                                           |
+|     - dev-1, dev-2   --> Development Servers                |
+|     - test-1, test-2 --> Testing Servers                    |
+|     - prod-1, prod-2 --> Production Servers                 |
+|                                                             |
+|  3. SSH CONNECTION                                          |
+|     - Master connects to all nodes via SSH                  |
+|     - No agent needed on managed nodes                      |
+|     - Secure and lightweight communication                  |
+|                                                             |
+|  4. AGENTLESS                                               |
+|     - No software installed on managed nodes                |
+|     - Only SSH access is required                           |
+|     - Unlike Puppet/Chef which need agents                  |
+|                                                             |
+|  5. CONFIG FILES (on Master Node)                           |
+|     - host inventory file --> Lists all managed nodes       |
+|     - ansible.cfg         --> Main Ansible configuration    |
+|                                                             |
+|  6. SOFTWARE ANSIBLE CAN MANAGE                             |
+|     +----------------+                                      |
+|     | tomcat 9.0.10  | --> Web Application Server           |
+|     | java 21        | --> Programming Runtime              |
+|     | maven 3.9.7    | --> Build Automation Tool            |
+|     | ....           | --> Any other software               |
+|     +----------------+                                      |
+|                                                             |
++=============================================================+
+
+
+Ansible Installation on Master Node
+sudo dnf install python3-pip -y
+pip install ansible
+ansible --version
+
+
+sudo hostnamectl set-hostname <Server-Name>
+
+Configure all servers with this
+line no : 63,38 --> yes,yes
+vi /etc/ssh/sshd_config
