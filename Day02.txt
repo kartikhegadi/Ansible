@@ -68,7 +68,7 @@ sed -i "s/present/absent/g" 01.yaml
 cat 01.yaml
 
 ------------------------------------------------------------------------------------------
-Hey claud here you can explain about command module 
+
 
 ------------------------------------------------------------------------------------------
 #install nginx start it and copy the file to nginx default directory and print the success message for each task
@@ -116,9 +116,6 @@ vi l2.yaml
 ansible-playbook l2.yaml
 cat 02.yaml
 
-<hey claud here you can write the users 
-i have deployed index.html file in Supporing files docx
-and fter opeign nginx security port 80 thy can access the page >
 
 ------------------------------------------------------------------------------------------
 
@@ -293,9 +290,146 @@ variable explicitly by using -extra-vars "var_name = <what you want to install>"
 
 ansible-playbook 05.yaml --extra-vars "top=top"
 ------------------------------------------------------------------
-
-
 ============
+LOOPS
+Loops are used to reduce the number of lines in a code
+
+“with_items is the older looping method in Ansible, while loop is the modern and recommended approach. loop is more flexible, readable, and supports advanced data structures. In current best practices, we always use loop instead of with_items.”
+
+loop:
+        - git
+        - maven
+        - docker
+        - nginx
+        - httpd        
+
+      with_items:
+        - git
+        - maven
+        - docker
+        - nginx
+        - httpd
+------------------------------------------------------------------
+vi 07.yaml
+
+# here we will learn about the loops in ansible
+---
+- name: loop example
+  hosts: all
+  become: yes
+  gather_facts: False
+  tasks:
+    - name: Installation of multiple packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+        - maven
+        - docker
+        - nginx
+        - httpd
+...
+
+
+add on 
+- name: Install git
+  yum:
+    name: git
+    state: present
+
+state: present means “make sure it is installed (exists)”
+------------------------------------------------------------------
+ansible-playbook 07.yaml 
+------------------------------------------------------------------
+
+=============
+Writing a playbook using Adhoc Commands
+types 
+1.SHELL
+2.COMMAND
+3.RAW
+------------------------------------------------------------------
+vi 08.yaml
+
+# Writing playbook using ad-hoc commands
+---
+- name: playbook using ad-hoc commands
+  hosts : all
+  tasks : 
+    - name: git installation 
+      shell: yum install git -y
+    - name: maven install
+      command: yum install maven -y
+    - name: docker install
+      raw: yum install docker -y  
+
+...
+------------------------------------------------------------------
+ansible-playbook 08.yaml
+------------------------------------------------------------------
+============
+NOTIFY & HANDLERS
+assumen we have multiple handlers are there like i.e
+
+task 1 - install git
+task 2 - install maven
+task 3 - install nginx
+task 4 - start nginx
+task 5 - check version of git
+task 6 - check version of maven
+
+------------------------------------------------------------------
+- name: Demo of notify and handlers
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: TASK 1 - Create application config file
+      copy:
+        dest: /tmp/app.conf
+        content: |
+          APP_NAME=DevOpsDemo
+          VERSION=1.0
+      notify: Restart application service # 🔔 NOTIFY HANDLER
+
+    - name: TASK 2 - Install nginx
+      dnf:
+        name: nginx
+        state: present
+
+    - name: TASK 3 - Ensure nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: TASK 5 - Print completion message
+      debug:
+        msg: "All main tasks executed successfully"
+
+  handlers:
+    - name: Restart application service # This is TASK 4 (Handler)
+      service:
+        name: nginx
+        state: restarted
+------------------------------------------------------------------
+ansible-playbook 09.yaml 
+------------------------------------------------------------------
+Execution Flow (Very Important)
+What happens when you run the playbook?
+
+Task 1 executes
+Creates /tmp/app.conf
+If the file is changed, handler is notified
+Task 2 executes
+Task 3 executes
+Task 5 executes
+Handler runs at the END
+Restart application service (your “Task 4”)
+
+
+
 
 
 
