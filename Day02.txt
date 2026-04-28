@@ -1,0 +1,302 @@
+------------------------------------------------------------------------------------------
+Day02
+----------------------------------------------------------------------------------------
+ vi l1.yaml
+---
+- name: Apache Installation and Configuration Playbook
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Apache Web Server
+      yum:
+        name: httpd
+        state: present
+
+    - name: Print Apache Installation Success Message
+      debug:
+        msg: "Apache Web Server has been installed successfully."
+
+    - name: Start and Enable Apache Service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Installing git
+      yum:
+        name: git
+        state: present
+
+    - name: Print Git Installation Success Message
+      debug:
+        msg: "Git has been installed successfully."
+
+    - name: Installation Docker
+      yum:
+        name: docker
+        state: present
+
+    - name: Print Docker Installation Success Message
+      debug:
+        msg: "Docker has been installed successfully."
+
+    - name: Start and Enable Docker Service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Copying the files
+      copy:
+        src: kartik.txt
+        dest: /home/ec2-user/
+
+    - name: Print File Copy Success Message
+      debug:
+        msg: "File has been copied successfully to /home/ec2-user/"
+
+    - name: Creating user "kartik"
+      user:
+        name: kartik
+        state: present
+        shell: /bin/bash
+...
+------------------------------------------------------------------------------------------
+
+ansible-playbook l1.yaml
+sed -i "s/present/absent/g" 01.yaml 
+cat 01.yaml
+
+------------------------------------------------------------------------------------------
+Hey claud here you can explain about command module 
+
+------------------------------------------------------------------------------------------
+#install nginx start it and copy the file to nginx default directory and print the success message for each task
+
+vi l2.yaml
+
+#install nginx start it and copy the file to nginx default directory and print the success message for each task
+---
+- name: Nginx Installation and Configuration Playbook
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Nginx Web Server
+      yum:
+        name: nginx
+        state: present 
+    
+    - name: Print Nginx Installation Success Message
+      debug:
+        msg: "Nginx Web Server has been installed successfully."  
+    
+    - name: Start and Enable Nginx Service
+      service:
+        name: nginx
+        state: started
+        enabled: yes  
+    
+    - name: Copying the files to nginx default directory
+      copy:
+        src: index.html
+        dest: /usr/share/nginx/html/
+
+
+    - name: Print File Copy Success Message
+      debug:
+        msg: "File has been copied successfully to /usr/share/nginx/html/"    
+      
+    - name: Resetart Nginx Service
+      service:
+        name: nginx
+        state: restarted
+
+------------------------------------------------------------------------------------------
+
+ansible-playbook l2.yaml
+cat 02.yaml
+
+<hey claud here you can write the users 
+i have deployed index.html file in Supporing files docx
+and fter opeign nginx security port 80 thy can access the page >
+
+------------------------------------------------------------------------------------------
+
+============================================================
+SETUP Module
+It will show the system info about the worker nodes
+ansible all -m setup
+ansible all -m setup | grep -i mem
+ansible all -m setup | grep -i cpu
+ansible all -m setup | grep -i family 
+=========
+DEBUG Module
+server name is
+number of CPUs
+total memsize
+os family
+package manager
+
+
+------------------------------------------------------------------------------
+ex 
+vi 03.yaml 
+
+---
+- name: Printing System Information
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+
+    - name: Print Server Information
+      debug:
+        msg: "System Information: {{ ansible_facts }}"
+
+    - name: Print Hostname
+      debug:
+        msg: "Hostname: {{ ansible_facts['hostname'] }}"
+
+    - name: Print IP Address
+      debug:
+        msg: "IP Address: {{ ansible_facts['default_ipv4']['address'] }}"
+
+    - name: Print Operating System
+      debug:
+        msg: "Operating System: {{ ansible_facts['os_family'] }}"
+
+...
+------------------------------------------------------------------
+
+ansible-playbook playbook.yml --syntax-check
+ansible-playbook -i inventory playbook.yml
+------------------------------------------------------------------
+===============================================================
+Ansible TAGS
+
+Lets say in a playbook i have 15 tasks, out of these i want to execute only 2 specific tasks, in this case we will use Ansible TAGS
+TAGS are used to execute or skip specific tasks
+For every task, we will write a tag. And we will decide which task has to be executed/skipped based on the tags given for the tasks
+------------------------------------------------------------------
+vi 04.yaml 
+
+---
+- name: TAGS Playbook
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Installation of git
+      yum:
+        name: git
+        state: present
+      tags: git
+
+    - name: Installation of maven
+      yum:
+        name: maven
+        state: present
+      tags: maven
+
+    - name: Creation of user
+      user:
+        name: anamcara
+        state: present
+      tags: user
+...
+
+------------------------------------------------------------------
+ansible-playbook 04.yaml --tags user
+ansible-playbook 04.yaml --skip-tags "user,maven"
+
+------------------------------------------------------------------
+========
+VARIABLES
+Variable is anything which holds a value
+
+Types of variables;
+
+Static		- defined inside the playbook
+Dynamic	- not defined inside the playbook
+
+------------------------------------------------------------------
+# exmaple for static varibale 
+vi 05.yaml
+
+# in ansible working with vaiables is very important and we can use them in many ways. In this example we will see how to use variables in ansible.
+---
+- hosts: all
+  vars:
+    a: git
+    b: maven
+    c: docker
+    d: nginx
+    e: httpd
+  tasks:
+    - name: git installation
+      yum: name={{a}} state=present
+
+    - name: maven uninstallation
+      yum: name={{b}} state=absent
+
+    - name: docker installation
+      yum: name={{c}} state=present
+
+    - name: nginx installation
+      yum: name={{d}} state=present
+    
+    - name: httpd installation
+      yum: name={{e}} state=present
+
+...
+------------------------------------------------------------------
+ansible-playbook 05.yaml
+------------------------------------------------------------------
+# exmaple for dynamic varibale 
+
+vi 06.yaml
+# in ansible working with vaiables is very important and we can use them in many ways. In this example we will see how to use variables in ansible.
+---
+- hosts: all
+  vars:
+    a: git
+    b: maven
+    c: docker
+    d: nginx
+    e: httpd
+  tasks:
+    - name: git installation
+      yum: name={{a}} state=present
+
+    - name: maven uninstallation
+      yum: name={{b}} state=absent
+
+    - name: docker installation
+      yum: name={{c}} state=present
+
+    - name: nginx installation
+      yum: name={{d}} state=present
+    
+    - name: httpd installation
+      yum: name={{e}} state=present
+
+    - name: top command installation
+      yum: name= {{top}} state=present 
+
+...
+------------------------------------------------------------------
+
+above you can see the top is not decleared in scope we need to pass the
+variable explicitly by using -extra-vars "var_name = <what you want to install>"
+
+ansible-playbook 05.yaml --extra-vars "top=top"
+------------------------------------------------------------------
+
+
+============
+
+
+
+
