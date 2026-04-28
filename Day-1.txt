@@ -233,7 +233,7 @@ Playbook is case sensitive and indentations are very important
 
 At the beginning of any playbook, it is recommended to write the description (-name:<Description of playbook>)
 
-example 
+example 1
 vi playbook1.yml
 ---
 
@@ -264,6 +264,45 @@ vi playbook1.yml
 
 6. List Tasks (Before Running)
   ansible-playbook playbook1.yml --list-tasks
+
+
+example 2
+vi playbook2.yml
+
+---
+- name: installation of apache
+  hosts: all
+  become: yes
+  tasks:
+    - name: installation of apache webserver
+      yum:
+        name: httpd
+        state: present
+    - name: print a message
+      debug: #debug is the module name to print a message
+        msg: "Apache is successfull installed"
+...
+
+1. Check Playbook Syntax
+  ansible-playbook playbook2.yml --syntax-check
+
+2. Check Inventory Connectivity (Ad-hoc way)
+  ansible all -m ping
+
+3. Dry Run (Check Mode)
+  ansible-playbook playbook2.yml --check
+  ansible-playbook playbook2.yml
+
+4. Execute the Playbook
+  ansible-playbook playbook2.yml
+  ansible-playbook -i hosts playbook2.yml
+
+5. Verbose Output (for debugging)
+  ansible-playbook playbook2.yml -v
+  ansible-playbook playbook2.yml -vvv
+
+6. List Tasks (Before Running)
+  ansible-playbook playbook2.yml --list-tasks
 ---------------------------TASK----------------------------------
 Task: Execute the commands available in the below for practicing MODULES concept
 https://chatgpt.com/share/697cd30c-6b30-8002-9297-849f73b75404
