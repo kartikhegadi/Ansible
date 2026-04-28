@@ -154,3 +154,116 @@ ansible all -m ping
 -----------------------------------------------------------------
 ansible dev-server --list-hosts 
 ansible test-server --list-hosts 
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+
+=> Working with Ansible;
+3 ways of working with ansible;
+1. Adhoc Commands
+2. Modules
+3. Playbooks
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+1. Adhoc Commands
+
+ansible all -a "yum install git -y"
+clear
+ansible dev-server -a "yum install maven -y"
+ansible all -a "useradd ming"
+ansible all -a "cat /etc/passwd"
+git -v
+mvn -v
+cat /etc/passwd
+ansible dev-server -a "yum remove maven* -y"
+ansible all -a "yum remove git* -y"
+ansible all -a "touch file1.txt"
+ansible all -a "mkdir ansible-day01"
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+2. Ansible Modules
+These will work based on key-value pairs
+
+"yum" - module name
+"user" - module name
+
+States;
+yum modules;
+install = present
+uninstall = absent
+update = latest
+
+service modules;
+start = started
+stop = stopped
+restart a service = restarted
+enable a service = enabled
+
+key=value 
+
+
+ansible all -m yum -a "name=docker state=present"
+ansible all -m yum -a "name=httpd state=present"
+ansible all -a "httpd -v"
+ansible all -m yum -a "name=docker state=absent"
+ansible all -a "systemctl status httpd"
+ansible all -m service -a "name=httpd state=started"
+ansible all -a "systemctl status httpd"
+ansible all -m service -a "name=httpd state=status"
+ansible all -m service -a "name=httpd state=state"
+ansible all -m user -a "name=lambo state=present"
+ansible all -a "cat /etc/password"
+ansible all -a "cat /etc/passwd"
+touch ansible.py
+ls
+ansible all -m copy -a "src=ansible.py dest=/root"
+ansible all -a "ll /root"
+ansible all -a "ls /root"
+ansible all -a "ls /tmp"
+ansible all -a "ls /bin"
+-----------------------------------------------------------------
+
+=> Ansible Playbooks
+A playbook contains task(s)
+
+Playbooks in ansible will be written in YAML format
+YAML file starts with --- and ends with ... (optional)
+.yml or .yaml
+Playbook is case sensitive and indentations are very important
+
+At the beginning of any playbook, it is recommended to write the description (-name:<Description of playbook>)
+
+example 
+vi playbook1.yml
+---
+
+- name: Playbook to check the connection between the servers
+  hosts: all
+  tasks:
+    - name: Testing the connectivity
+      ping:
+...
+
+1. Check Playbook Syntax
+  ansible-playbook playbook1.yml --syntax-check
+
+2. Check Inventory Connectivity (Ad-hoc way)
+  ansible all -m ping
+
+3. Dry Run (Check Mode)
+  ansible-playbook playbook1.yml --check
+  ansible-playbook playbook1.yml
+
+4. Execute the Playbook
+  ansible-playbook playbook1.yml
+  ansible-playbook -i hosts playbook1.yml
+
+5. Verbose Output (for debugging)
+  ansible-playbook playbook1.yml -v
+  ansible-playbook playbook1.yml -vvv
+
+6. List Tasks (Before Running)
+  ansible-playbook playbook1.yml --list-tasks
+---------------------------TASK----------------------------------
+Task: Execute the commands available in the below for practicing MODULES concept
+https://chatgpt.com/share/697cd30c-6b30-8002-9297-849f73b75404
