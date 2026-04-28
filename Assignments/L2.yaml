@@ -1,0 +1,31 @@
+---
+- name: Install Docker and run containers (without Python SDK)
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Install Docker
+      yum:
+        name: docker
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull car-race image
+      command: docker pull kartik404/car-race
+
+    - name: Pull bike-race image
+      command: docker pull kartik404/bike-race
+
+    - name: Run car-race container
+      command: docker run -d -p 8081:81 --name car-race kartik404/car-race
+      ignore_errors: yes
+
+    - name: Run bike-race container
+      command: docker run -d -p 8082:82 --name bike-race kartik404/bike-race
+      ignore_errors: yes
