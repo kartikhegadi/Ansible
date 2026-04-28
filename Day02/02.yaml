@@ -1,0 +1,34 @@
+#install nginx start it and copy the file to nginx default directory and print the success message for each task
+---
+- name: Nginx Installation and Configuration Playbook
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Nginx Web Server
+      yum:
+        name: nginx
+        state: present
+
+    - name: Print Nginx Installation Success Message
+      debug:
+        msg: "Nginx Web Server has been installed successfully."
+
+    - name: Start and Enable Nginx Service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Copying the files to nginx default directory
+      copy:
+        src: index.html
+        dest: /usr/share/nginx/html/
+
+    - name: Print File Copy Success Message
+      debug:
+        msg: "File has been copied successfully to /usr/share/nginx/html/"
+
+    - name: Resetart Nginx Service
+      service:
+        name: nginx
+        state: restarted

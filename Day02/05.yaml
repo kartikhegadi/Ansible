@@ -1,0 +1,25 @@
+# in ansible working with vaiables is very important and we can use them in many ways. In this example we will see how to use variables in ansible.
+---
+- hosts: all
+  vars:
+    a: git
+    b: maven
+    c: docker
+    d: nginx
+    e: httpd
+  tasks:
+    - name: git installation
+      yum: name={{a}} state=present
+
+    - name: maven uninstallation
+      yum: name={{b}} state=absent
+
+    - name: docker installation
+      yum: name={{c}} state=present
+
+    - name: nginx installation
+      yum: name={{d}} state=present
+
+    - name: httpd installation
+      yum: name={{e}} state=present
+...

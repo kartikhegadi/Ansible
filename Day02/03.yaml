@@ -1,0 +1,47 @@
+---
+- name: Printing System Information
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+
+    - name: Print Server Information
+      debug:
+        msg: "System Information: {{ ansible_facts }}"
+
+    - name: Print Hostname
+      debug:
+        msg: "Hostname: {{ ansible_facts['hostname'] }}"
+
+    - name: Print IP Address
+      debug:
+        msg: "IP Address: {{ ansible_facts['default_ipv4']['address'] }}"
+
+    - name: Print Operating System
+      debug:
+        msg: "Operating System: {{ ansible_facts['os_family'] }}"
+
+    - name: Print CPU Architecture
+      debug:
+        msg: "CPU Architecture: {{ ansible_facts['architecture'] }}"
+
+    - name: Print Memory Information
+      debug:
+        msg: "Memory: {{ ansible_facts['memtotal_mb'] }} MB"
+
+    - name: Print Disk Information
+      debug:
+        msg: "Disk Info: {{ ansible_facts['devices'] }}"
+
+    - name: Print Uptime
+      debug:
+        msg: "Uptime: {{ ansible_facts['uptime_seconds'] }} seconds"
+
+    - name: Print Last Boot Time
+      debug:
+        msg: "Last Boot Time: {{ ansible_facts['date_time']['boot'] }}"
+
+    - name: Print SELinux Status
+      debug:
+        msg: "SELinux Status: {{ ansible_facts['selinux']['status'] }}"

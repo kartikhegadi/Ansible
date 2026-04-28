@@ -1,0 +1,18 @@
+# here we will learn about the loops in ansible
+---
+- name: loop example
+  hosts: all
+  become: yes
+  gather_facts: False
+  tasks:
+    - name: Installation of multiple packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+        - maven
+        - docker
+        - nginx
+        - httpd
+...

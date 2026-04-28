@@ -1,0 +1,12 @@
+# Writing playbook using ad-hoc commands
+---
+- name: playbook using ad-hoc commands
+  hosts: all
+  tasks:
+    - name: git installation
+      shell: yum install git -y
+    - name: maven install
+      command: yum install maven -y
+    - name: docker install
+      raw: yum install docker -y
+...

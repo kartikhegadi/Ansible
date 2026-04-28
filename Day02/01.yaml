@@ -1,0 +1,59 @@
+---
+- name: Apache Installation and Configuration Playbook
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Apache Web Server
+      yum:
+        name: httpd
+        state: present
+
+    - name: Print Apache Installation Success Message
+      debug:
+        msg: "Apache Web Server has been installed successfully."
+
+    - name: Start and Enable Apache Service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Installing git
+      yum:
+        name: git
+        state: present
+
+    - name: Print Git Installation Success Message
+      debug:
+        msg: "Git has been installed successfully."
+
+    - name: Installation Docker
+      yum:
+        name: docker
+        state: present
+
+    - name: Print Docker Installation Success Message
+      debug:
+        msg: "Docker has been installed successfully."
+
+    - name: Start and Enable Docker Service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Copying the files
+      copy:
+        src: kartik.txt
+        dest: /home/ec2-user/
+
+    - name: Print File Copy Success Message
+      debug:
+        msg: "File has been copied successfully to /home/ec2-user/"
+
+    - name: Creating user "kartik"
+      user:
+        name: kartik
+        state: present
+        shell: /bin/bash
+...

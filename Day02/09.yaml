@@ -1,0 +1,33 @@
+- name: Demo of notify and handlers
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: TASK 1 - Create application config file
+      copy:
+        dest: /tmp/app.conf
+        content: |
+          APP_NAME=DevOpsDemo
+          VERSION=1.0
+      notify: Restart application service # 🔔 NOTIFY HANDLER
+
+    - name: TASK 2 - Install nginx
+      dnf:
+        name: nginx
+        state: present
+
+    - name: TASK 3 - Ensure nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: TASK 5 - Print completion message
+      debug:
+        msg: "All main tasks executed successfully"
+
+  handlers:
+    - name: Restart application service # 👉 This is TASK 4 (Handler)
+      service:
+        name: nginx
+        state: restarted
