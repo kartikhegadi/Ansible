@@ -93,3 +93,64 @@ sudo hostnamectl set-hostname <Server-Name>
 Configure all servers with this
 line no : 63,38 --> yes,yes
 vi /etc/ssh/sshd_config
+systemctl restart sshd
+systemctl status sshd
+
+
+set password for root users for all ur nodes (testserver,Devservers)
+passwd root
+
+then move ur ssh 
+ssh-copy-id root@<Private-IP>
+
+Setting up the host inventory file
+Note: By default, in the latest versions we will not have host inventory file in /etc/ansible/hosts path. We need to explicitly create this path and also the inventory file
+
+Step 1 — Create /etc/ansible/ directory
+sudo mkdir -p /etc/ansible
+
+Step 2 — Create a config file
+sudo nano /etc/ansible/ansible.cfg
+
+Paste this minimal configuration:
+[defaults]
+inventory=/etc/ansible/hosts
+host_key_checking=False
+
+Save & exit.
+
+Step 3 — Create the hosts inventory file
+sudo nano /etc/ansible/hosts
+
+Add your hosts:
+[dev-servers]
+your-ec2-private-ip-here
+
+[test-servers]
+your-ec2-private-ip-here
+
+Save & exit.
+
+To verify the connection ----> ansible all -m ping ---> You should see the response from all the 4 worker nodes as "pong"
+
+ansible all --list-hosts
+ansible-inventory --list
+
+[dev-server]
+172.31.15.228
+
+[test-server]
+172.31.14.181
+-----------------------------------------------------------------
+ansible all -m ping
+
+172.31.14.181 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3.9"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+-----------------------------------------------------------------
+ansible dev-server --list-hosts 
+ansible test-server --list-hosts 
