@@ -1,0 +1,74 @@
+
+==============================
+Conditions - WHEN module
+==============================
+Types of servers;
+Homogenous Servers		- servers with same OS and flavour
+Heterogenous Servers		- servers with different OS and flavour
+
+--------------------------------------------------------
+
+
+--------------------------------------------------------
+
+=============================
+LAMP Stack
+=============================
+L - Linux OS
+A - Apache (webserver)
+M - MySQL or MariaDB (Database)
+P - PHP (Server-side scripting language)
+
+Task: Setup LAMP Stack with custom php page
+https://chatgpt.com/share/6982119a-26d4-8002-83e0-2018a6b6776e
+
+==================================
+LOOKUP Module
+==================================
+Lets say i have a file which consists of data, i want to read this file using ansible playbook. In this case we will use LOOKUP module
+
+==================================
+UI
+==================================
+UI for Docker is Docker Portrainer
+UI for Ansible is Ansible Tower
+
+==================================
+Ansible Strategies
+==================================
+1. linear (default)
+
+2. free
+
+==================================
+Ansible Roles
+==================================
+So far we have written multiple modules in a single yml file. In this case, if i want to call a specific module it becomes difficult. So what we can do is, we will write separate playbooks for each module, and then we can call which ever playbook need. This we can achieve using Ansible Roles
+
+Ansible roles helps to organize and structure your playbooks by breaking them into reusable components
+
+Ansible roles are used to divide the playbook into a directory structure
+
+packages
+users
+webservers
+
+===================================
+Ansible Galaxy
+===================================
+
+
+===================================
+Ansible Vault
+===================================
+Ansible vault will encrypt the yml files
+It is used to store the yml files in a secured way
+
+===================================
+Asynchronous and Polling
+===================================
+For every task in ansible we can set a time limit
+If the task is not performed in that time limit, ansible will stop the playbook execution
+This is called as asynchronous and polling
+
+ignore_errors: yes
