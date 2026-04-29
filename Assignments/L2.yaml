@@ -1,5 +1,5 @@
 ---
-- name: Install Docker and run containers (without Python SDK)
+- name: Install Docker and run containers 
   hosts: all
   become: yes
 
