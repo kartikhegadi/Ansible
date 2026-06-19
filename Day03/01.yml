@@ -1,0 +1,7 @@
+- hosts: all
+  tasks:
+    - name: git installation on AL
+      yum: name=git state=present
+
+    - name: git installation on Ubuntu
+      apt: name=git state=present

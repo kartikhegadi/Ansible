@@ -1,0 +1,56 @@
+- name: LAMP Stack Setup on Amazon Linux 2023
+  hosts: lamp
+  become: yes
+
+  tasks:
+
+    - name: Update all packages
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Install Apache
+      package:
+        name: httpd
+        state: present
+
+    - name: Start and enable Apache
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Install MariaDB 10.5 Server
+      package:
+        name: mariadb105-server
+        state: present
+
+    - name: Start and enable MariaDB
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Install PHP and extensions
+      package:
+        name:
+          - php
+          - php-mysqlnd
+        state: present
+
+    - name: Restart Apache after PHP install
+      service:
+        name: httpd
+        state: restarted
+
+    - name: Deploy sample PHP application
+      copy:
+        dest: /var/www/html/index.php
+        owner: apache
+        group: apache
+        mode: '0644'
+        content: |
+          <?php
+          echo "<h1>LAMP Stack Working on Amazon Linux 2023</h1>";
+          echo "<p>MariaDB + Apache + PHP</p>";
+          ?>

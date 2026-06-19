@@ -1,0 +1,10 @@
+- hosts: all
+  strategy: free
+  tasks: 
+    - name: git installation on RedHat
+      yum: name=git state=present
+      when: ansible_os_family == "RedHat"
+
+    - name: git installation on Debian
+      apt: name=git state=present
+      when: ansible_os_family == "Debian"
