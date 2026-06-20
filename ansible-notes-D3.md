@@ -281,7 +281,7 @@ vi lookup.yaml
 - name: lookup playbook
   hosts: all
   vars:
-    credentials: "{{ lookup('file', '/home/ec2-user/day3/kastro.txt') }}"
+    credentials: "{{ lookup('file', '/home/ec2-user/day3/kartik.txt') }}"
   tasks:
     - debug:
         msg: My Credentials Are {{ credentials }}
