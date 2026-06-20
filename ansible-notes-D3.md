@@ -365,6 +365,49 @@ users/
 webservers/
 ```
 
+```bash
+vi ansibleroles.yaml
+```
+
+```yaml
+- name: installation of packages
+  yum:
+    name: "{{item}}"
+    state: present
+  loop:
+    - git
+    - maven
+    - tree
+    - docker
+
+- name: creation of users
+  user:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - hemant
+    - raju 
+    - ramesh
+    - vaibhav
+
+- name: installation of webservers
+  yum:
+    name: httpd
+    state: present
+- name: starting httpd
+  service:
+    name: httpd
+    state: started
+
+- name: master playbook to call roles
+  hosts: all
+  become: yes
+  roles:
+    - pkgs
+    - users
+```
+
+
 > **Benefit:** Each role (e.g., `webservers`) is self-contained and can be reused across multiple projects or playbooks — instead of copy-pasting the same tasks everywhere.
 
 ---
